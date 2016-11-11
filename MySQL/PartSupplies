@@ -1,0 +1,133 @@
+create database noodles;
+use noodles;
+
+create table
+Suppliers
+(sid integer, 
+sname varchar(20), 
+address varchar(20));
+
+create table
+Parts
+(pid integer, 
+pname varchar(20), 
+color varchar(20));
+
+create table
+Catalog
+( sid integer ,
+pid integer,
+cost real);
+#The Catalog relation lists the prices charged for parts by Suppliers. Write the following queries in SQL:
+
+#1. Find the pnames of parts for which there is some supplier.
+select distinct pname
+from Parts p, Catalog c
+where p.pid = c.pid;
+
+#2. Find the snames of suppliers who supply every part.
+select distinct sname
+from suppliers s
+where NOT EXISTS
+	(select p.pid
+	from parts p
+	where p.pid NOT IN
+		(select c.pid
+		from catalog c
+		where c.sid = s.sid)
+	);
+
+#3. Find the snames of suppliers who supply every red part.
+select distinct sname
+from suppliers s
+where NOT EXISTS
+	(select pid
+	from parts p
+	where p.color = 'red' and pid NOT IN
+		(select pid 
+		from catalog c
+		where c.pid = s.sid)
+);
+
+
+#4. Find the pnames of parts supplied by Acme Widget Suppliers and no one else.
+select distinct p.pname
+from parts p, suppliers s, catalog c
+where s.sid = c.sid and p.pid = c.pid and s.sname = 'Acme Widget Suppliers' and c.pid NOT IN
+	(select distinct p.pid
+	from catalog c, parts p
+	where c.pid = p.pid and c.sid NOT IN
+		(select distinct sid
+		from suppliers s
+		where s.sname = 'Acme Widget Suppliers')
+	);
+
+
+#5. Find the sids of suppliers who charge more for some part than the average cost of that part
+#(averaged over all the suppliers who supply that part).
+select distinct sname
+from suppliers s, catalog c
+where s.sid = c.sid and c.cost > any
+	(select AVG(c.cost)
+    	from catalog c, parts p
+    	where p.pid = c.pid)
+group by pid;
+
+
+#6. For each part, find the sname of the supplier who charges the most for that part.
+select distinct sname
+from suppliers s, catalog c, parts p
+where s.sid = c.sid and c.cost = any
+	(select MAX(c.cost)
+   	 from catalog c)
+group by p.pid;
+
+#7. Find the sids of suppliers who supply only red parts.
+select distinct sid
+from catalog c, parts p
+where p.pid = c.pid and p.color = 'red' and c.sid NOT IN
+	(select distinct c.sid
+    from catalog c, parts p
+	where p.pid = c.pid and p.color <> 'red'
+	);
+
+
+#8. Find the sids of suppliers who supply a red part and a green part.
+select distinct c.sid
+from catalog c, parts p
+where p.pid = c.pid and p.color = 'red' and c.sid = any
+(select distinct sid
+from catalog c, parts p
+where p.pid = c.pid and p.color = 'green');
+
+#9. Find the sids of suppliers who supply a red part or a green part.
+select distinct c.sid
+from catalog c, parts p
+where p.pid = c.pid and p.color = 'red'
+UNION
+select distinct sid
+from catalog c, parts p
+where p.pid = c.pid and p.color = 'green';
+
+#10. For every supplier that only supplies green parts, print the name of the supplier and the total number #of parts that she supplies.
+select distinct s.sname, count(c.pid)
+from suppliers s, catalog c, parts p
+where p.pid = c.pid and p.color = 'green' and c.sid NOT IN
+	(select distinct c.sid
+    from catalog c, parts p
+	where p.pid = c.pid and p.color <> 'green'
+	);
+
+#11. For every supplier that supplies a green part and a red part, print the name and price of the most expensive part that she supplies.
+select distinct s.sname, max(c.cost)
+from suppliers s, catalog c, parts p
+where c.sid = s.sid and c.pid = p.pid and s.sid = any 
+	(select distinct c.sid
+	from catalog c, parts p
+	where p.pid = c.pid and p.color = 'red' and sid = any
+		(select distinct sid
+		from catalog c, parts p
+		where p.pid = c.pid and p.color = 'green'
+        )
+	)
+group by s.sid;
