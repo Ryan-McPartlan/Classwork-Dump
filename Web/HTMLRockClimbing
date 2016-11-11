@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+
+
+<html>
+<head>
+<meta charset = "utf-8" />
+<title>Rock Climging Fun</title>
+
+
+<body>
+
+
+<header style = "text-align: center">
+	<img src="rockclimber.jpg" width="450" height="300" alt="Rock climber" />
+</header>
+
+
+<section>
+<article>
+<p>Rock Climbing Fun has recently opened a school at the base of Mount Rainier. We have programs BLAG ABLAFGAFAFEFA. Call 1-800-555-CLIMB for more information. </p>
+
+
+<h2 style ="color: #384738">Equiptment needed to get started:</h2>
+
+
+<ul style="list-style-type: square">
+	<li>Comfortable climbing shoes</li>
+	<li>Backpack</li>
+	<li>Harness</li>
+</ul>
+</article>
+</section>
+
+
+<hr style="height: 2px; background-color: #384738; width: 50%" />
+
+
+<footer style="text-align: center; font-style: italic">
+	Rock Climbing Fun, 3737 Harrison Lane, Issawak, WA 98000
+</footer>
+
+
+</body>
+</html>
+
+
+
+
