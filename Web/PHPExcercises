@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<body>
+	<p>
+	<strong>Problem1</strong>
+		<br>
+		<?php
+			$month = date('F', time());
+			
+			if($month == 'August'){
+				print("It's August, so it's really hot.");
+			}
+			else{
+				print("It's {$month} so at least it's not in the peak of the heat.");
+			}
+		?>
+		<br><br>
+		<strong>Problem2</strong>
+		<br>
+			<?php
+				for ($i = 1; $i <= 12; $i++){
+				print "{$i} * {$i} = ".($i + $i);
+					print ("<br>");
+				}
+			?>
+		<br><br>
+		<strong>Problem3</strong>
+		<table border = "1">
+		<?php
+			for($i = 1; $i <= 7; $i++){
+				print "<tr>";
+				for($j = 1; $j <= 7; $j++){
+					print "<td align='center'>";
+					print ($j*$i);
+					print"</td>";
+				}
+				print"</tr>";
+			}
+		?>
+		<table>
+	</p>
+</body>
+
+
